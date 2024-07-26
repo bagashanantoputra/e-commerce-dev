@@ -1,9 +1,9 @@
 package database
 
 import (
-	"fmt"
 	"ecommerce/models"
 	"ecommerce/pkg/postgres"
+	"fmt"
 )
 
 func RunMigration() {

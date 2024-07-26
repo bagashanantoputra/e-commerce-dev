@@ -2,6 +2,7 @@ package jwtToken
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -28,6 +29,11 @@ func VerifyToken(tokenString string) (*jwt.Token, error) {
 	})
 
 	if err != nil {
+		if err == jwt.ErrTokenExpired {
+			log.Println("Token has expired")
+		} else {
+			log.Println("Token verification failed:", err)
+		}
 		return nil, err
 	}
 	return token, nil

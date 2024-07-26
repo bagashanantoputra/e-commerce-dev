@@ -9,6 +9,8 @@ type Product struct {
 	Price       int                   `json:"price" form:"price" gorm:"type: int"`
 	Photo       string                `json:"photo" form:"photo" gorm:"type: varchar(255)"`
 	Stock       int                   `json:"stock" form:"stock" gorm:"type: int"`
+	UserID      int                   `json:"user_id"`
+	User        User                  `json:"user"`
 	Cart        []CartProductResponse `json:"cart"`
 	CreatedAt   time.Time             `json:"-"`
 	UpdatedAt   time.Time             `json:"-"`

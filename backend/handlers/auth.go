@@ -1,11 +1,11 @@
 package handlers
 
 import (
+	authdto "ecommerce/dto/auth"
+	dto "ecommerce/dto/result"
 	"log"
 	"net/http"
 	"time"
-	authdto "ecommerce/dto/auth"
-	dto "ecommerce/dto/result"
 
 	"ecommerce/models"
 	"ecommerce/pkg/bcrypt"
@@ -26,83 +26,148 @@ func HandlerAuth(AuthRepository repositories.AuthRepository) *handlerAuth {
 }
 
 func (h *handlerAuth) Register(c echo.Context) error {
+	log.Println("Start handling registration")
+
 	request := new(authdto.AuthRequest)
 	if err := c.Bind(request); err != nil {
+		log.Println("Failed to bind request:", err)
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
 	}
+
+	log.Println("Request binding successful:", request)
 
 	validation := validator.New()
 	err := validation.Struct(request)
 	if err != nil {
+		log.Println("Validation failed:", err)
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
 	}
+
+	log.Println("Validation successful")
 
 	password, err := bcrypt.HashingPassword(request.Password)
 	if err != nil {
+		log.Println("Password hashing failed:", err)
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
 	}
 
+	log.Println("Password hashing successful")
+
+	currentTime := time.Now()
+
 	user := models.User{
-		IsAdmin:  request.IsAdmin,
-		Name:     request.Name,
-		Email:    request.Email,
-		Password: password,
+		IsAdmin:   request.IsAdmin,
+		FirstName: request.FirstName,
+		LastName:  request.LastName,
+		Email:     request.Email,
+		Password:  password,
+		CreatedAt: currentTime,
+		UpdatedAt: currentTime,
 	}
+
+	log.Println("User created:", user)
 
 	data, err := h.AuthRepository.Register(user)
 	if err != nil {
+		log.Println("User registration failed:", err)
 		return c.JSON(http.StatusInternalServerError, dto.ErrorResult{Status: http.StatusInternalServerError, Message: err.Error()})
 	}
+
+	log.Println("User registration successful:", data)
 
 	return c.JSON(http.StatusOK, dto.SuccessResult{Status: http.StatusOK, Message: "Your registration is successful", Data: data})
 }
 
 func (h *handlerAuth) Login(c echo.Context) error {
+	log.Println("Start handling login")
+
 	request := new(authdto.LoginRequest)
 	if err := c.Bind(request); err != nil {
+		log.Println("Failed to bind request:", err)
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
 	}
 
-	user := models.User{
-		Email:    request.Email,
-		Password: request.Password,
-	}
+	log.Println("Request binding successful:", request)
 
-	user, err := h.AuthRepository.Login(user.Email)
+	user, err := h.AuthRepository.Login(request.Email)
 	if err != nil {
+		log.Println("Login failed:", err)
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
 	}
+
+	log.Println("User found:", user)
 
 	isValid := bcrypt.CheckPasswordHash(request.Password, user.Password)
 	if !isValid {
+		log.Println("Password check failed: wrong email or password")
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Status: http.StatusBadRequest, Message: "wrong email or password"})
 	}
+
+	log.Println("Password check successful")
 
 	claims := jwt.MapClaims{}
 	claims["id"] = user.ID
 	claims["is_admin"] = user.IsAdmin
-	claims["exp"] = time.Now().Add(time.Hour * 2).Unix() // 2 hours expired
+	claims["exp"] = time.Now().Add(time.Minute * 1).Unix()
 
-	token, errGenerateToken := jwtToken.GenerateToken(&claims)
-	if errGenerateToken != nil {
-		log.Println(errGenerateToken)
+	token, err := jwtToken.GenerateToken(&claims)
+	if err != nil {
+		log.Println("Token generation failed:", err)
 		return echo.NewHTTPError(http.StatusUnauthorized)
 	}
 
+	log.Println("Token generation successful")
+
 	loginResponse := authdto.LoginResponse{
 		IsAdmin: user.IsAdmin,
-		Email: user.Email,
-		Token: token,
+		Email:   user.Email,
+		Token:   token,
 	}
+
+	log.Println("Login response prepared:", loginResponse)
 
 	return c.JSON(http.StatusOK, dto.SuccessResult{Status: http.StatusOK, Message: "You have successfully logged in", Data: loginResponse})
 }
 
 func (h *handlerAuth) CheckAuth(c echo.Context) error {
-	userLogin := c.Get("userLogin")
-	userId := userLogin.(jwt.MapClaims)["id"].(float64)
+	log.Println("Start handling CheckAuth")
 
-	user, _ := h.AuthRepository.CheckAuth(int(userId))
+	userLogin := c.Get("userLogin")
+	if userLogin == nil {
+		log.Println("User login not found in context")
+		return c.JSON(http.StatusUnauthorized, dto.ErrorResult{Status: http.StatusUnauthorized, Message: "User not logged in"})
+	}
+
+	log.Println("User login found:", userLogin)
+
+	claims, ok := userLogin.(jwt.MapClaims)
+	if !ok {
+		log.Println("Failed to parse user claims from context")
+		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Status: http.StatusBadRequest, Message: "Invalid token"})
+	}
+
+	// Check if token is expired
+	exp, ok := claims["exp"].(float64)
+	if !ok || time.Unix(int64(exp), 0).Before(time.Now()) {
+		log.Println("Token has expired")
+		return c.JSON(http.StatusUnauthorized, dto.ErrorResult{Status: http.StatusUnauthorized, Message: "Token has expired"})
+	}
+
+	userId, ok := userLogin.(jwt.MapClaims)["id"].(float64)
+	if !ok {
+		log.Println("Failed to parse user ID from token")
+		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Status: http.StatusBadRequest, Message: "Invalid token"})
+	}
+
+	log.Println("User ID parsed from token:", userId)
+
+	user, err := h.AuthRepository.CheckAuth(int(userId))
+	if err != nil {
+		log.Println("CheckAuth failed:", err)
+		return c.JSON(http.StatusInternalServerError, dto.ErrorResult{Status: http.StatusInternalServerError, Message: err.Error()})
+	}
+
+	log.Println("CheckAuth successful, user found:", user)
 
 	return c.JSON(http.StatusOK, dto.SuccessResult{Status: http.StatusOK, Data: user})
 }

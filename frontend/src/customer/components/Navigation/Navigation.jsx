@@ -1,8 +1,11 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useContext, useEffect, useCallback } from 'react'
 import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
 import { Bars3Icon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useNavigate } from "react-router-dom";
 import Cart from '../Cart/Cart';
+import { UserContext } from "../../../context/userContext";
+import { API, setAuthToken } from "../../../config/api";
+import Swal from "sweetalert2";
 
 const navigation = {
   categories: [
@@ -134,9 +137,48 @@ function classNames(...classes) {
 }
 
 export default function Navigation() {
+  let navigate = useNavigate();
   const [open, setOpen] = useState(false)
   const [isHidden, setIsHidden] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [state, dispatch] = useContext(UserContext);
+
+  const checkUser = useCallback(async () => {
+    try {
+      const response = await API.get("/check-auth");
+      let payload = response.data.data;
+      payload.token = localStorage.token;
+      dispatch({
+        type: "USER_SUCCESS",
+        payload,
+      });
+    } catch (error) {
+      dispatch({
+        type: "AUTH_ERROR",
+      });
+    }
+  },[]);
+
+  useEffect(() => {
+    if (localStorage.token) {
+      setAuthToken(localStorage.token);
+      checkUser();
+    }
+  }, [checkUser]);
+
+  const logout = () => {
+    dispatch({
+      type: "LOGOUT",
+    });
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: "Logout Success",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+    navigate("/");
+  };
 
   const handleClose = () => {
     setIsCartOpen(false);
@@ -260,18 +302,35 @@ export default function Navigation() {
                   ))}
                 </div>
 
-                <div className="space-y-6 border-t border-gray-400 px-4 py-6">
-                  <div className="flow-root">
-                    <a href="/signin" className="-m-2 block p-2 font-medium text-gray-900">
-                      Sign in
-                    </a>
+                {state.isLogin === true ? (
+                  // Konten yang akan ditampilkan saat pengguna sudah login
+                  <div className="space-y-6 border-t border-gray-400 px-4 py-6">
+                    <div className="flow-root">
+                      <button 
+                        onClick={logout}
+                        className="-m-2 block p-2 font-medium text-gray-900"
+                      >
+                        Logout
+                      </button>
+                    </div>
+                    {/* Tambahkan konten lain untuk pengguna yang sudah login, misalnya tautan ke profil */}
                   </div>
-                  <div className="flow-root">
-                    <a href="/create-account" className="-m-2 block p-2 font-medium text-gray-900">
-                      Create account
-                    </a>
+                ) : (
+                  // Konten yang akan ditampilkan saat pengguna belum login
+                  <div className="space-y-6 border-t border-gray-400 px-4 py-6">
+                    <div className="flow-root">
+                      <a href="/signin" className="-m-2 block p-2 font-medium text-gray-900">
+                        Sign in
+                      </a>
+                    </div>
+                    <div className="flow-root">
+                      <a href="/create-account" className="-m-2 block p-2 font-medium text-gray-900">
+                        Create account
+                      </a>
+                    </div>
                   </div>
-                </div>
+                )}
+
               </Dialog.Panel>
             </Transition.Child>
           </div>
@@ -448,8 +507,44 @@ export default function Navigation() {
                   ))}
                 </div>
               </Popover.Group>
+              
+              
 
               <div className="ml-auto flex items-center">
+              {state.isLogin === true ? (
+                <>
+                  <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                    {/* Misalnya, tautan ke profil pengguna atau logout */}
+                    <Link to="/profile" className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                      Profile
+                    </Link>
+                    <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
+                    <button 
+                      className="text-sm font-medium text-gray-700 hover:text-gray-800"
+                      onClick={logout} // Menambahkan onClick event handler
+                    >
+                      Logout
+                    </button>
+                  </div>
+
+                  <div className="ml-4 flow-root lg:ml-6">
+                      <button onClick={toggleCart} className="group -m-2 flex items-center p-2">
+                          <ShoppingBagIcon
+                            className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                            aria-hidden="true"
+                          />
+                          <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">2</span>
+                          <span className="sr-only">items in cart, view bag</span>
+                      </button>
+                      <Cart 
+                        show={isCartOpen}
+                        onClose={handleClose}
+                        onClick={handleClose}
+                      />
+                  </div>
+                </>
+              ) : (
+                // Konten yang akan ditampilkan saat pengguna belum login
                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                   <Link to="/signin" className="text-sm font-medium text-gray-700 hover:text-gray-800">
                     Sign in
@@ -459,6 +554,8 @@ export default function Navigation() {
                     Create account
                   </Link>
                 </div>
+              )}
+
 
                 {/* Search */}
                 {/* <div className="flex lg:ml-6">
@@ -468,22 +565,7 @@ export default function Navigation() {
                   </a>
                 </div> */}
 
-                {/* Cart */}
-                <div className="ml-4 flow-root lg:ml-6">
-                  <button onClick={toggleCart} className="group -m-2 flex items-center p-2">
-                    <ShoppingBagIcon
-                      className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                      aria-hidden="true"
-                    />
-                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">2</span>
-                    <span className="sr-only">items in cart, view bag</span>
-                  </button>
-                  <Cart 
-                  show={isCartOpen}
-                  onClose={handleClose}
-                  onClick={handleClose}
-                  />
-                </div>
+
               </div>
             </div>
           </div>

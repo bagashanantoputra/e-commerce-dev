@@ -1,13 +1,13 @@
 package handlers
 
 import (
-	"net/http"
-	"strconv"
-	"time"
 	dto "ecommerce/dto/result"
 	transactionsdto "ecommerce/dto/transaction"
 	"ecommerce/models"
 	"ecommerce/repositories"
+	"net/http"
+	"strconv"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt/v4"
@@ -96,7 +96,8 @@ func (h *handlerTransaction) CreateTransaction(c echo.Context) error {
 
 	var userTransaction models.UserTransactionResponse
 	userTransaction.ID = user.ID
-	userTransaction.Name = user.Name
+	userTransaction.FirstName = user.FirstName
+	userTransaction.LastName = user.LastName
 	userTransaction.Email = user.Email
 
 	var productTransaction []models.ProductTransaction
@@ -138,7 +139,8 @@ func (h *handlerTransaction) CreateTransaction(c echo.Context) error {
 		ID:                 transactionId,
 		UserID:             int(userId),
 		User:               userTransaction,
-		Name:               request.Name,
+		FirstName:          request.FirstName,
+		LastName:           request.LastName,
 		Email:              request.Email,
 		Phone:              request.Phone,
 		Address:            request.Address,

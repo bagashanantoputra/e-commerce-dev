@@ -1,14 +1,14 @@
 package handlers
 
 import (
-	"fmt"
-	"net/http"
-	"os"
-	"strconv"
 	dto "ecommerce/dto/result"
 	usersdto "ecommerce/dto/user"
 	"ecommerce/models"
 	"ecommerce/repositories"
+	"fmt"
+	"net/http"
+	"os"
+	"strconv"
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
@@ -77,8 +77,12 @@ func (h *handler) UpdateUser(c echo.Context) error {
 
 	user.IsAdmin = request.IsAdmin
 
-	if request.Name != "" {
-		user.Name = request.Name
+	if request.FirstName != "" {
+		user.FirstName = request.FirstName
+	}
+
+	if request.LastName != "" {
+		user.LastName = request.LastName
 	}
 
 	if request.Email != "" {
@@ -180,8 +184,9 @@ func (h *handler) DeleteUser(c echo.Context) error {
 
 func convertResponse(u models.User) usersdto.UserResponse {
 	return usersdto.UserResponse{
-		ID:    u.ID,
-		Name:  u.Name,
-		Email: u.Email,
+		ID:        u.ID,
+		FirstName: u.FirstName,
+		LastName:  u.LastName,
+		Email:     u.Email,
 	}
 }
