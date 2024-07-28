@@ -6,6 +6,8 @@ import Cart from '../Cart/Cart';
 import { UserContext } from "../../../context/userContext";
 import { API, setAuthToken } from "../../../config/api";
 import Swal from "sweetalert2";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 
 const navigation = {
   categories: [
@@ -157,7 +159,7 @@ export default function Navigation() {
         type: "AUTH_ERROR",
       });
     }
-  },[]);
+  },[dispatch]);
 
   useEffect(() => {
     if (localStorage.token) {
@@ -167,17 +169,35 @@ export default function Navigation() {
   }, [checkUser]);
 
   const logout = () => {
-    dispatch({
-      type: "LOGOUT",
-    });
     Swal.fire({
-      position: "center",
-      icon: "success",
-      title: "Logout Success",
-      showConfirmButton: false,
-      timer: 1500,
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch({
+          type: "LOGOUT",
+        });
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Logout Success",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        navigate("/");
+      }
     });
-    navigate("/");
+  };
+
+  const capitalizeFirstLetter = (string) => {
+    if (typeof string !== 'string') return '';
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
   };
 
   const handleClose = () => {
@@ -508,20 +528,21 @@ export default function Navigation() {
                 </div>
               </Popover.Group>
               
-              
-
               <div className="ml-auto flex items-center">
               {state.isLogin === true ? (
                 <>
                   <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                    {/* Misalnya, tautan ke profil pengguna atau logout */}
-                    <Link to="/profile" className="text-sm font-medium text-gray-700 hover:text-gray-800">
-                      Profile
+                    <Link to="/profile" className="text-sm font-medium text-gray-700 hover:text-gray-800 flex items-center">
+                      <FontAwesomeIcon 
+                        icon={faUserCircle} 
+                        className="h-8 w-8 text-gray-400 mr-2" 
+                      />
+                        {capitalizeFirstLetter(state.user.first_name) || 'Profile'}
                     </Link>
                     <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
                     <button 
                       className="text-sm font-medium text-gray-700 hover:text-gray-800"
-                      onClick={logout} // Menambahkan onClick event handler
+                      onClick={logout}
                     >
                       Logout
                     </button>

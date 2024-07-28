@@ -7,7 +7,6 @@ const initialState = {
     user: {},
 };
 
-//untuk mengelola state pada context
 const reducer = (state, action) => {
     const { type, payload } = action;
 
@@ -27,7 +26,7 @@ const reducer = (state, action) => {
             user: {},
         };
         default:
-        throw new Error();
+            throw new Error(`Unhandled action type: ${type}`);
     }
 };
 
