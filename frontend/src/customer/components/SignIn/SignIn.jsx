@@ -36,7 +36,7 @@ export default function SignIn() {
   
         // Status check
         if (data.is_admin === true) {
-          Navigate("/tabletransaction");
+          Navigate("/");
         } else {
           Navigate("/");
         }

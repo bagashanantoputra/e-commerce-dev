@@ -323,8 +323,20 @@ export default function Navigation() {
                 </div>
 
                 {state.isLogin === true ? (
-                  // Konten yang akan ditampilkan saat pengguna sudah login
-                  <div className="space-y-6 border-t border-gray-400 px-4 py-6">
+                  <div className="space-y-6 border-t border-gray-400 px-4 py-6 lg:space-y-0 lg:flex lg:items-center lg:justify-between">
+                    {state.user.is_admin === true ? (
+                        <div className="flow-root">
+                          <a href="/dashboard" className="-m-2 block p-2 font-medium text-gray-900">
+                            Dashboard
+                          </a>
+                        </div>
+                    ) : (
+                      <div className="flow-root">
+                        <a href="/user-profile" className="-m-2 block p-2 font-medium text-gray-900">
+                          Profile
+                        </a>
+                      </div>
+                    )}
                     <div className="flow-root">
                       <button 
                         onClick={logout}
@@ -333,7 +345,6 @@ export default function Navigation() {
                         Logout
                       </button>
                     </div>
-                    {/* Tambahkan konten lain untuk pengguna yang sudah login, misalnya tautan ke profil */}
                   </div>
                 ) : (
                   // Konten yang akan ditampilkan saat pengguna belum login
@@ -350,6 +361,7 @@ export default function Navigation() {
                     </div>
                   </div>
                 )}
+
 
               </Dialog.Panel>
             </Transition.Child>
@@ -530,52 +542,61 @@ export default function Navigation() {
               
               <div className="ml-auto flex items-center">
               {state.isLogin === true ? (
-                <>
-                  <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                    <Link to="/profile" className="text-sm font-medium text-gray-700 hover:text-gray-800 flex items-center">
-                      <FontAwesomeIcon 
-                        icon={faUserCircle} 
-                        className="h-8 w-8 text-gray-400 mr-2" 
-                      />
+                  <>
+                    <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                      <Link to="/profile" className="text-sm text-gray-700 hover:text-gray-800 flex items-center">
+                        <FontAwesomeIcon 
+                          icon={faUserCircle} 
+                          className="h-8 w-8 text-gray-400 mr-2" 
+                        />
                         {capitalizeFirstLetter(state.user.first_name) || 'Profile'}
-                    </Link>
-                    <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
-                    <button 
-                      className="text-sm font-medium text-gray-700 hover:text-gray-800"
-                      onClick={logout}
-                    >
-                      Logout
-                    </button>
-                  </div>
+                      </Link>
+                      <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
+                      {state.user.is_admin === true && (
+                        <>
+                          <Link to="/admin-dashboard" className="text-sm text-gray-700 hover:text-gray-800">
+                            Admin Dashboard
+                          </Link>
+                          <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
+                        </>
+                      )}
+                      <button 
+                        className="text-sm text-gray-700 hover:text-gray-800"
+                        onClick={logout}
+                      >
+                        Logout
+                      </button>
+                    </div>
 
-                  <div className="ml-4 flow-root lg:ml-6">
+
+                    <div className="ml-4 flow-root lg:ml-6">
                       <button onClick={toggleCart} className="group -m-2 flex items-center p-2">
-                          <ShoppingBagIcon
-                            className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                            aria-hidden="true"
-                          />
-                          <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">2</span>
-                          <span className="sr-only">items in cart, view bag</span>
+                        <ShoppingBagIcon
+                          className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                          aria-hidden="true"
+                        />
+                        <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">2</span>
+                        <span className="sr-only">items in cart, view bag</span>
                       </button>
                       <Cart 
                         show={isCartOpen}
                         onClose={handleClose}
                         onClick={handleClose}
                       />
+                    </div>
+                  </>
+                ) : (
+                  // Konten yang akan ditampilkan saat pengguna belum login
+                  <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                    <Link to="/signin" className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                      Sign in
+                    </Link>
+                    <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
+                    <Link to="/create-account" className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                      Create account
+                    </Link>
                   </div>
-                </>
-              ) : (
-                // Konten yang akan ditampilkan saat pengguna belum login
-                <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                  <Link to="/signin" className="text-sm font-medium text-gray-700 hover:text-gray-800">
-                    Sign in
-                  </Link>
-                  <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
-                  <Link to="/create-account" className="text-sm font-medium text-gray-700 hover:text-gray-800">
-                    Create account
-                  </Link>
-                </div>
-              )}
+                )}
 
 
                 {/* Search */}
