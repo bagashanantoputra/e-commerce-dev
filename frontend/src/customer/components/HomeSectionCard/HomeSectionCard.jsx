@@ -13,8 +13,8 @@ export default function HomeSectionCard() {
 
         <div className="mt-6">
           <Swiper
-            slidesPerView={4}
-            spaceBetween={30}
+            slidesPerView={1}
+            spaceBetween={10}
             pagination={{
               clickable: true,
               el: '.swiper-pagination-custom',
@@ -22,6 +22,18 @@ export default function HomeSectionCard() {
             navigation={{
               nextEl: '.swiper-button-next',
               prevEl: '.swiper-button-prev',
+            }}
+            breakpoints={{
+              // When window width is >= 640px (sm)
+              640: {
+                slidesPerView: 2,
+                spaceBetween: 20,
+              },
+              // When window width is >= 1024px (lg)
+              1024: {
+                slidesPerView: 4,
+                spaceBetween: 30,
+              },
             }}
             modules={[Pagination, Navigation]}
             className="mySwiper"
@@ -44,12 +56,11 @@ export default function HomeSectionCard() {
           </Swiper>
           <div className="swiper-pagination-custom text-center mt-5">
             {sectionData.map((product, index) => (
-                <div
-                  key={product.id}
-                  className={`swiper-pagination-bullet ${index === 0 ? 'swiper-pagination-bullet-active' : ''}`}
-                >
-                </div>
-              ))}
+              <div
+                key={product.id}
+                className={`swiper-pagination-bullet ${index === 0 ? 'swiper-pagination-bullet-active' : ''}`}
+              ></div>
+            ))}
           </div>
           <div className="custom-button-next swiper-button-next"></div>
           <div className="custom-button-prev swiper-button-prev"></div>

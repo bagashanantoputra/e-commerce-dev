@@ -370,7 +370,7 @@ export default function Navigation() {
       </Transition.Root>
 
       <header className="fixed inset-x-0 top-0 z-50">
-        {!isHidden && (
+        {!state.isLogin && !isHidden && (
           <div className="relative isolate flex items-center gap-x-6 overflow-hidden bg-indigo-600 px-6 py-2.5 sm:px-3.5 sm:before:flex-1"  style={{ width: '100%' }}>
             <div
               className="absolute left-[max(-7rem,calc(50%-52rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl"
@@ -555,7 +555,7 @@ export default function Navigation() {
                       {state.user.is_admin === true && (
                         <>
                           <Link to="/admin-dashboard" className="text-sm text-gray-700 hover:text-gray-800">
-                            Admin Dashboard
+                            Dashboard
                           </Link>
                           <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
                         </>
@@ -569,7 +569,7 @@ export default function Navigation() {
                     </div>
 
 
-                    <div className="ml-4 flow-root lg:ml-6">
+                    {/* <div className="ml-4 flow-root lg:ml-6">
                       <button onClick={toggleCart} className="group -m-2 flex items-center p-2">
                         <ShoppingBagIcon
                           className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
@@ -583,7 +583,7 @@ export default function Navigation() {
                         onClose={handleClose}
                         onClick={handleClose}
                       />
-                    </div>
+                    </div> */}
                   </>
                 ) : (
                   // Konten yang akan ditampilkan saat pengguna belum login

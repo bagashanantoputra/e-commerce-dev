@@ -19,15 +19,15 @@ export default function MainCarousel() {
           <div className="pb-80 pt-10 sm:pb-30 sm:pt-24 lg:pb-40 lg:pt-40">
             <div className="relative mx-auto max-w-7xl px-4 sm:static sm:px-6">
               <div className="sm:max-w-lg">
-                <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+                <p className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
                   Express Your Personality with High-Quality Products
-                </h1>
-                <p className="mt-4 text-xl text-gray-500">
+                </p>
+                <p className="mt-4 mb-4 text-xl text-gray-500">
                   Shop the Latest Trends and Must-Haves
                 </p>
               </div>
               <div>
-                <div className="mt-10">
+                <div className="mb-4">
                   {/* Decorative image grid */}
                   <div
                     aria-hidden="true"
