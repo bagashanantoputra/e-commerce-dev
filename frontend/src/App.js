@@ -6,19 +6,37 @@ import SignInPage from './customer/pages/SignInPage/SignInPage';
 import CreateAccountPage from './customer/pages/CreateAccountPage/CreateAccountPage';
 import CheckoutPage from './customer/pages/CheckoutPage/CheckoutPage';
 import ProfilePage from './customer/pages/ProfilePage/ProfilePage';
+import PrivateRoute from './customer/components/PrivateRoutes/PrivateRoute';
+import { UserContextProvider } from './context/userContext';
 
 function App() {
   return (
-    <div>
+    <UserContextProvider>
+      <div>
         <Routes>
-          <Route path="/" element={<HomePage/>}/>
-          <Route path="products" element={<ProductPage/>}/>
-          <Route path="signin" element={<SignInPage/>}/>
-          <Route path="create-account" element={<CreateAccountPage/>}/>
-          <Route path="checkout" element={<CheckoutPage/>}/>
-          <Route path="profile" element={<ProfilePage/>}/>
+          <Route path="/" element={<HomePage />} />
+          <Route path="products" element={<ProductPage />} />
+          <Route path="signin" element={<SignInPage />} />
+          <Route path="create-account" element={<CreateAccountPage />} />
+          <Route
+            path="checkout"
+            element={
+              <PrivateRoute>
+                <CheckoutPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="profile"
+            element={
+              <PrivateRoute>
+                <ProfilePage />
+              </PrivateRoute>
+            }
+          />
         </Routes>
-    </div>
+      </div>
+    </UserContextProvider>
   );
 }
 

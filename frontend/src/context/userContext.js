@@ -1,4 +1,4 @@
-import { createContext, useReducer } from "react";
+import { createContext, useReducer, useContext } from "react";
 
 export const UserContext = createContext();
 
@@ -39,3 +39,5 @@ export const UserContextProvider = ({ children }) => {
         </UserContext.Provider>
     );
 };
+
+export const useUserContext = () => useContext(UserContext);

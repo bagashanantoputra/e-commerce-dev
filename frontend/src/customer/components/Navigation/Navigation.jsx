@@ -541,52 +541,50 @@ export default function Navigation() {
               </Popover.Group>
               
               <div className="ml-auto flex items-center">
-              {state.isLogin === true ? (
+                {state.isLogin === true ? (
                   <>
                     <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                       <Link to="/profile" className="text-sm text-gray-700 hover:text-gray-800 flex items-center">
-                        <FontAwesomeIcon 
-                          icon={faUserCircle} 
-                          className="h-8 w-8 text-gray-400 mr-2" 
+                        <FontAwesomeIcon
+                          icon={faUserCircle}
+                          className="h-8 w-8 text-gray-400 mr-2"
                         />
                         {capitalizeFirstLetter(state.user.first_name) || 'Profile'}
                       </Link>
                       <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
-                      {state.user.is_admin === true && (
+                      {state.user.is_admin === true ? (
                         <>
                           <Link to="/admin-dashboard" className="text-sm text-gray-700 hover:text-gray-800">
                             Dashboard
                           </Link>
                           <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
                         </>
+                      ) : (
+                        <div className="ml-4 flow-root lg:ml-6">
+                          <button onClick={toggleCart} className="group -m-2 flex items-center p-2">
+                            <ShoppingBagIcon
+                              className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                              aria-hidden="true"
+                            />
+                            <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">2</span>
+                            <span className="sr-only">items in cart, view bag</span>
+                          </button>
+                          <Cart
+                            show={isCartOpen}
+                            onClose={handleClose}
+                            onClick={handleClose}
+                          />
+                        </div>
                       )}
-                      <button 
+                      <button
                         className="text-sm text-gray-700 hover:text-gray-800"
                         onClick={logout}
                       >
                         Logout
                       </button>
                     </div>
-
-
-                    {/* <div className="ml-4 flow-root lg:ml-6">
-                      <button onClick={toggleCart} className="group -m-2 flex items-center p-2">
-                        <ShoppingBagIcon
-                          className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                          aria-hidden="true"
-                        />
-                        <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">2</span>
-                        <span className="sr-only">items in cart, view bag</span>
-                      </button>
-                      <Cart 
-                        show={isCartOpen}
-                        onClose={handleClose}
-                        onClick={handleClose}
-                      />
-                    </div> */}
                   </>
                 ) : (
-                  // Konten yang akan ditampilkan saat pengguna belum login
                   <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                     <Link to="/signin" className="text-sm font-medium text-gray-700 hover:text-gray-800">
                       Sign in
