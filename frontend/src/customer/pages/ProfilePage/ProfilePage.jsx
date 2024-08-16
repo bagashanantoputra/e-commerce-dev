@@ -1,5 +1,5 @@
 import React from 'react'
-import Footer from '../../components/Footer/Footer'
+// import Footer from '../../components/Footer/Footer'
 import Navigation from '../../components/Navigation/Navigation'
 import Profile from '../../components/Profile/Profile'
 import ScrollToTop from '../../components/ScrollToTop/ScrollToTop'
@@ -9,7 +9,7 @@ const ProfilePage = () => {
         <div>
             <Navigation/>
             <Profile/>
-            <Footer/>
+            {/* <Footer/> */}
             <ScrollToTop/>
         </div>
     )
