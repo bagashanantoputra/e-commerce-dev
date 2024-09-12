@@ -1,11 +1,11 @@
 import React from 'react'
-import Navigation from '../../components/Navigation/Navigation'
+// import Navigation from '../../components/Navigation/Navigation'
 import CreateAccount from '../../components/CreateAccount/CreateAccount'
 
 const CreateAccountPage = () => {
     return (
         <div>
-            <Navigation/>
+            {/* <Navigation/> */}
             <CreateAccount/>
         </div>
     )
