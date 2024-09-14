@@ -1,5 +1,5 @@
 import React from 'react'
-import MainCarousel from '../../components/HomeCarousel/MainCarousel'
+// import MainCarousel from '../../components/HomeCarousel/MainCarousel'
 import HomeSectionCard from '../../components/HomeSectionCard/HomeSectionCard'
 import HomeSectionCarousel from '../../components/HomeSectionCarousel/HomeSectionCarousel'
 import Footer from '../../components/Footer/Footer'
@@ -8,12 +8,14 @@ import Review from '../../components/Review/Review'
 import Collaboration from '../../components/Collaboration/Collaboration'
 import Navigation from '../../components/Navigation/Navigation'
 import ScrollToTop from '../../components/ScrollToTop/ScrollToTop'
+import Jumbotron from '../../components/Jumbotron/Jumbotron'
 
 const HomePage = () => {
   return (
     <div>
         <Navigation/>
-        <MainCarousel/>
+        <Jumbotron/>
+        {/* <MainCarousel/> */}
         <HomeSectionCard/>
         <HomeCollection/>
         <HomeSectionCarousel/>

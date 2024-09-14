@@ -423,7 +423,7 @@ export default function Navigation() {
             </div>
           </div>
         )}
-        <nav aria-label="Top" className="bg-gray-100 shadow-md mx-auto max-w-100 px-4 sm:px-6 lg:px-8">
+        <nav aria-label="Top" className="bg-white bg-opacity-70 shadow-md mx-auto max-w-100 px-4 sm:px-6 lg:px-8">
           <div>
             <div className="flex h-16 items-center">
               <button

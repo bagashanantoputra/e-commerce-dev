@@ -82,10 +82,12 @@ export default function CreateAccount() {
 
       navigate('/signin');
     } catch (error) {
+      const errorMessage = error.response?.data?.message || 'Register Failed';
+
       Swal.fire({
         position: 'center',
         icon: 'error',
-        title: 'Register Failed',
+        title: errorMessage,
         showConfirmButton: false,
         timer: 1500,
       });

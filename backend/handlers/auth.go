@@ -28,6 +28,7 @@ func HandlerAuth(AuthRepository repositories.AuthRepository) *handlerAuth {
 func (h *handlerAuth) Register(c echo.Context) error {
 	log.Println("Start handling registration")
 
+	// Bind request data
 	request := new(authdto.AuthRequest)
 	if err := c.Bind(request); err != nil {
 		log.Println("Failed to bind request:", err)
@@ -36,6 +37,7 @@ func (h *handlerAuth) Register(c echo.Context) error {
 
 	log.Println("Request binding successful:", request)
 
+	// Validate the request data
 	validation := validator.New()
 	err := validation.Struct(request)
 	if err != nil {
@@ -45,6 +47,14 @@ func (h *handlerAuth) Register(c echo.Context) error {
 
 	log.Println("Validation successful")
 
+	// Check if the user already exists by email
+	existingUser, err := h.AuthRepository.Login(request.Email) // Assuming Login method finds user by email
+	if err == nil && existingUser.Email != "" {
+		log.Println("User already exists with email:", request.Email)
+		return c.JSON(http.StatusConflict, dto.ErrorResult{Status: http.StatusConflict, Message: "User already exists"})
+	}
+
+	// Proceed with password hashing
 	password, err := bcrypt.HashingPassword(request.Password)
 	if err != nil {
 		log.Println("Password hashing failed:", err)
@@ -55,6 +65,7 @@ func (h *handlerAuth) Register(c echo.Context) error {
 
 	currentTime := time.Now()
 
+	// Create new user
 	user := models.User{
 		IsAdmin:   request.IsAdmin,
 		FirstName: request.FirstName,
@@ -67,6 +78,7 @@ func (h *handlerAuth) Register(c echo.Context) error {
 
 	log.Println("User created:", user)
 
+	// Register the new user
 	data, err := h.AuthRepository.Register(user)
 	if err != nil {
 		log.Println("User registration failed:", err)
