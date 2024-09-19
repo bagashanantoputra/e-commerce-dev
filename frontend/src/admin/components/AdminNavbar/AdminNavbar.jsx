@@ -1,13 +1,14 @@
 import { Fragment, useState, useContext, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, Transition } from '@headlessui/react';
-import { XMarkIcon, Bars3Icon } from '@heroicons/react/24/outline';
+import { XMarkIcon, Bars3Icon, HomeIcon, UserGroupIcon, CubeIcon, ShoppingCartIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { UserContext } from '../../../context/userContext';
 import { API, setAuthToken } from '../../../config/api';
 import Swal from 'sweetalert2';
 
 const AdminNavbar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
   const navigate = useNavigate();
   const [state, dispatch] = useContext(UserContext);
 
@@ -62,10 +63,10 @@ const AdminNavbar = () => {
   };
 
   const navigationItems = [
-    { name: 'Dashboard', href: '/dashboard', current: true },
-    { name: 'Users', href: '/users', current: false },
-    { name: 'Products', href: '/products', current: false },
-    { name: 'Orders', href: '/orders', current: false },
+    { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
+    { name: 'Users', href: '/users', icon: UserGroupIcon },
+    { name: 'Products', href: '/products', icon: CubeIcon },
+    { name: 'Orders', href: '/orders', icon: ShoppingCartIcon },
   ];
 
   return (
@@ -121,12 +122,9 @@ const AdminNavbar = () => {
                     <a
                       key={item.name}
                       href={item.href}
-                      className={`block py-2 px-4 rounded-md text-base font-medium ${
-                        item.current
-                          ? 'bg-indigo-600 text-white'
-                          : 'text-gray-700 hover:bg-indigo-100 hover:text-indigo-600'
-                      }`}
+                      className="flex items-center py-2 px-4 rounded-md text-base font-medium text-gray-700 hover:bg-indigo-100 hover:text-indigo-600"
                     >
+                      <item.icon className="h-6 w-6 mr-3" />
                       {item.name}
                     </a>
                   ))}
@@ -148,33 +146,45 @@ const AdminNavbar = () => {
       </Transition.Root>
 
       {/* Static Sidebar for large screens */}
-      <div className="hidden lg:flex lg:flex-col lg:w-64 lg:bg-white lg:shadow-lg lg:fixed lg:inset-y-0">
+      <div className={`hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:bg-white lg:shadow-lg transition-all duration-300 ease-in-out ${isMinimized ? 'lg:w-20' : 'lg:w-64'}`}>
         <div className="flex flex-col flex-1">
-          <div className="flex items-center justify-between p-4">
-            <h2 className="text-lg font-bold text-gray-900">Admin Panel</h2>
+          <div className={`p-4 flex items-center ${isMinimized ? 'justify-center' : 'justify-between'}`}>
+            {/* Text Admin Panel on the left */}
+            {!isMinimized && <h2 className="ms-5 text-lg font-bold text-gray-900">Admin Panel</h2>}
+            
+            {/* Minimize button on the right */}
+            <button
+              onClick={() => setIsMinimized(!isMinimized)}
+              className="text-gray-400 hover:text-gray-600"
+            >
+              {isMinimized ? (
+                <ChevronRightIcon className="h-6 w-6" />
+              ) : (
+                <ChevronLeftIcon className="h-6 w-6" />
+              )}
+            </button>
           </div>
           <nav className="flex-1 space-y-2">
             {navigationItems.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
-                className={`block py-2 px-4 mx-4 rounded-md text-sm font-medium ${
-                  item.current
-                    ? 'bg-indigo-600 text-white'
-                    : 'text-gray-700 hover:bg-indigo-100 hover:text-indigo-600'
-                }`}
+                className={`flex items-center py-2 px-4 rounded-md text-sm font-medium text-gray-700 hover:bg-indigo-100 hover:text-indigo-600 ${isMinimized ? 'justify-center mx-2' : 'mx-4'}`}
+                title={isMinimized ? item.name : ''}
               >
-                {item.name}
+                <item.icon className={`h-6 w-6 ${isMinimized ? '' : 'mr-3'}`} />
+                {!isMinimized && <span>{item.name}</span>}
               </a>
             ))}
           </nav>
-          <div className="p-4">
+          <div className={`p-4 ${isMinimized ? 'flex justify-center' : ''}`}>
             {state.isLogin && (
               <button
                 onClick={logout}
-                className="w-full text-sm py-2 px-4 bg-red-600 text-white rounded-md hover:bg-red-500"
+                className={`text-sm py-2 px-4 bg-red-600 text-white rounded-md hover:bg-red-500 ${isMinimized ? 'w-10 h-10 flex items-center justify-center' : 'w-full'}`}
+                title={isMinimized ? 'Logout' : ''}
               >
-                Logout
+                {isMinimized ? <XMarkIcon className="h-5 w-5" /> : 'Logout'}
               </button>
             )}
           </div>

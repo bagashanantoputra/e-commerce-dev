@@ -90,20 +90,6 @@ const Dashboard = () => {
           },
         },
       },
-      datalabels: {
-        display: false,
-      },
-    },
-    plugins: {
-      datalabels: {
-        formatter: (value, ctx) => {
-          const total = ctx.dataset.data.reduce((acc, val) => acc + val, 0);
-          const percentage = ((value / total) * 100).toFixed(2) + '%';
-          return percentage;
-        },
-        color: '#fff',
-        display: true,
-      },
     },
   };
 
@@ -186,11 +172,11 @@ const Dashboard = () => {
         </section>
 
         {/* Charts Area */}
-        <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Bar Chart */}
           <div className="bg-white p-6 rounded shadow-md">
             <h3 className="text-lg font-semibold mb-4">Sales Overview</h3>
-            <div className="w-full h-80">
+            <div className="w-full h-64 lg:h-80">
               <Bar data={barData} options={barOptions} />
             </div>
           </div>
@@ -198,7 +184,7 @@ const Dashboard = () => {
           {/* Pie Chart */}
           <div className="bg-white p-6 rounded shadow-md">
             <h3 className="text-lg font-semibold mb-4">Product Purchases</h3>
-            <div className="w-full h-80">
+            <div className="w-full h-64 lg:h-80">
               <Doughnut data={pieData} options={pieOptions} />
             </div>
           </div>
@@ -206,7 +192,7 @@ const Dashboard = () => {
           {/* Line Chart */}
           <div className="bg-white p-6 rounded shadow-md">
             <h3 className="text-lg font-semibold mb-4">Daily Active Users</h3>
-            <div className="w-full h-80">
+            <div className="w-full h-64 lg:h-80">
               <Line data={lineData} options={lineOptions} />
             </div>
           </div>

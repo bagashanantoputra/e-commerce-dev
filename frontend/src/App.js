@@ -41,7 +41,7 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route path="admin-dashboard" element={<DashboardPage/>} />
+          <Route path="dashboard" element={<DashboardPage/>} />
         </Routes>
       </div>
     </UserContextProvider>

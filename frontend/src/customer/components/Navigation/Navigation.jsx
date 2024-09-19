@@ -423,7 +423,7 @@ export default function Navigation() {
             </div>
           </div>
         )}
-        <nav aria-label="Top" className="bg-white bg-opacity-70 shadow-md mx-auto max-w-100 px-4 sm:px-6 lg:px-8">
+        <nav aria-label="Top" className="bg-white shadow-md mx-auto max-w-100 px-4 sm:px-6 lg:px-8">
           <div>
             <div className="flex h-16 items-center">
               <button
@@ -554,7 +554,7 @@ export default function Navigation() {
                       <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
                       {state.user.is_admin === true ? (
                         <>
-                          <Link to="/admin-dashboard" className="text-sm text-gray-700 hover:text-gray-800">
+                          <Link to="/dashboard" className="text-sm text-gray-700 hover:text-gray-800">
                             Dashboard
                           </Link>
                           <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
