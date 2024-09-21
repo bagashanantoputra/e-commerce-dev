@@ -20,7 +20,6 @@ const Dashboard = () => {
     ],
   };
 
-  // Options for the bar chart
   const barOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -44,13 +43,12 @@ const Dashboard = () => {
     },
   };
 
-  // Sample data for the pie chart with actual order numbers
   const pieData = {
     labels: ['Electronics', 'Clothing', 'Home & Kitchen', 'Sports', 'Books'],
     datasets: [
       {
         label: 'Product Purchases',
-        data: [200, 150, 100, 80, 120], // Number of orders per category
+        data: [200, 150, 100, 80, 120],
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
           'rgba(54, 162, 235, 0.2)',
@@ -70,10 +68,8 @@ const Dashboard = () => {
     ],
   };
 
-  // Total order count
   const totalOrders = pieData.datasets[0].data.reduce((acc, value) => acc + value, 0);
 
-  // Options for the pie chart
   const pieOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -93,13 +89,12 @@ const Dashboard = () => {
     },
   };
 
-  // Sample data for the line chart
   const lineData = {
     labels: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
     datasets: [
       {
         label: 'Active Users',
-        data: [50, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110], // Number of active users per day
+        data: [50, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110],
         borderColor: 'rgba(75, 192, 192, 1)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         fill: true,
@@ -108,7 +103,6 @@ const Dashboard = () => {
     ],
   };
 
-  // Options for the line chart
   const lineOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -140,9 +134,9 @@ const Dashboard = () => {
   };
 
   return (
-    <>
+    <div className="h-screen bg-gray-100">
       {/* Main content */}
-      <main className="flex-1 bg-gray-100 p-4 md:p-8">
+      <main className="min-h-full p-4 md:p-8">
         {/* Header */}
         <header className="flex flex-col md:flex-row justify-between items-center mb-8">
           <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-0">Admin Dashboard</h1>
@@ -198,7 +192,7 @@ const Dashboard = () => {
           </div>
         </section>
       </main>
-    </>
+    </div>
   );
 };
 

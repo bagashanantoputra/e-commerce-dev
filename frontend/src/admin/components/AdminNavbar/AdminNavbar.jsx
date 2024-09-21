@@ -6,7 +6,7 @@ import { UserContext } from '../../../context/userContext';
 import { API, setAuthToken } from '../../../config/api';
 import Swal from 'sweetalert2';
 
-const AdminNavbar = () => {
+const AdminNavbar = ({ onMinimizeChange }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const navigate = useNavigate();
@@ -22,11 +22,26 @@ const AdminNavbar = () => {
         payload,
       });
     } catch (error) {
-      dispatch({
-        type: 'AUTH_ERROR',
-      });
+      if (error.response && error.response.status === 401) {
+        Swal.fire({
+          title: 'Session Expired',
+          text: 'Your session has expired. Please log in again.',
+          icon: 'warning',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'OK',
+        }).then(() => {
+          dispatch({
+            type: 'LOGOUT',
+          });
+          navigate('/');
+        });
+      } else {
+        dispatch({
+          type: 'AUTH_ERROR',
+        });
+      }
     }
-  }, [dispatch]);
+  }, [dispatch, navigate]);
 
   useEffect(() => {
     if (localStorage.token) {
@@ -62,6 +77,11 @@ const AdminNavbar = () => {
     });
   };
 
+  const handleMinimize = () => {
+    setIsMinimized(!isMinimized);
+    onMinimizeChange(!isMinimized); // Pass the minimized state to the parent component (dashboard)
+  };
+
   const navigationItems = [
     { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
     { name: 'Users', href: '/users', icon: UserGroupIcon },
@@ -82,7 +102,7 @@ const AdminNavbar = () => {
         </button>
       </div>
 
-      {/* Mobile Sidebar */}
+           {/* Mobile Sidebar */}
       <Transition.Root show={sidebarOpen} as={Fragment}>
         <Dialog as="div" className="relative z-40 lg:hidden" onClose={() => setSidebarOpen(false)}>
           <Transition.Child
@@ -154,7 +174,7 @@ const AdminNavbar = () => {
             
             {/* Minimize button on the right */}
             <button
-              onClick={() => setIsMinimized(!isMinimized)}
+              onClick={handleMinimize}
               className="text-gray-400 hover:text-gray-600"
             >
               {isMinimized ? (

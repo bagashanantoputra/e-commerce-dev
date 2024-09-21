@@ -120,7 +120,7 @@ func (h *handlerAuth) Login(c echo.Context) error {
 	claims := jwt.MapClaims{}
 	claims["id"] = user.ID
 	claims["is_admin"] = user.IsAdmin
-	claims["exp"] = time.Now().Add(time.Minute * 15).Unix()
+	claims["exp"] = time.Now().Add(time.Minute * 2).Unix()
 
 	token, err := jwtToken.GenerateToken(&claims)
 	if err != nil {
