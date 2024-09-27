@@ -11,9 +11,12 @@ import ProfilePage from './customer/pages/ProfilePage/ProfilePage';
 import PrivateRoute from './customer/components/PrivateRoutes/PrivateRoute';
 
 // Admin Page
-import DashboardPage from './admin/components/pages/DashboardPage/DashboardPage';
+import DashboardPage from './admin/pages/DashboardPage/DashboardPage';
 
 import { UserContextProvider } from './context/userContext';
+import UserPage from './admin/pages/UserPage/UserPage';
+import ProductAdminPage from './admin/pages/ProductPage/ProductPage';
+import OrderPage from './admin/pages/OrderPage/OrderPage';
 
 
 function App() {
@@ -42,6 +45,9 @@ function App() {
             }
           />
           <Route path="dashboard" element={<DashboardPage/>} />
+          <Route path="users" element={<UserPage/>} />
+          <Route path="product-admin" element={<ProductAdminPage/>} />
+          <Route path="orders" element={<OrderPage/>} />
         </Routes>
       </div>
     </UserContextProvider>

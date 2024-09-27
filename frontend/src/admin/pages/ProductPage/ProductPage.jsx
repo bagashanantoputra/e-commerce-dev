@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import AdminNavbar from '../../AdminNavbar/AdminNavbar';
-import Dashboard from '../../Dashboard/Dashboard';
+import AdminNavbar from '../../components/AdminNavbar/AdminNavbar';
+import ProductAdmin from '../../components/Product/ProductAdmin';
 
-const DashboardPage = () => {
+
+const ProductAdminPage = () => {
   const [isMinimized, setIsMinimized] = useState(false);
 
   // Callback function to receive the minimized state
@@ -15,14 +16,14 @@ const DashboardPage = () => {
       {/* Navbar */}
       <AdminNavbar onMinimizeChange={handleMinimizeChange} />
 
-      {/* Dashboard Content */}
+      {/* Product Content */}
       <div
         className={`transition-all duration-300 ease-in-out flex-1 ${isMinimized ? 'lg:ml-20' : 'lg:ml-64'}`}
       >
-        <Dashboard />
+        <ProductAdmin />
       </div>
     </div>
   );
 };
 
-export default DashboardPage;
+export default ProductAdminPage;

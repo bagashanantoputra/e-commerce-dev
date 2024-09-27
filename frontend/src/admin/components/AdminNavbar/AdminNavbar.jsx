@@ -85,7 +85,7 @@ const AdminNavbar = ({ onMinimizeChange }) => {
   const navigationItems = [
     { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
     { name: 'Users', href: '/users', icon: UserGroupIcon },
-    { name: 'Products', href: '/products', icon: CubeIcon },
+    { name: 'Products', href: '/product-admin', icon: CubeIcon },
     { name: 'Orders', href: '/orders', icon: ShoppingCartIcon },
   ];
 
