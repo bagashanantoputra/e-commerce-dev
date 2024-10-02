@@ -44,8 +44,22 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route path="dashboard" element={<DashboardPage/>} />
-          <Route path="users" element={<UserPage/>} />
+          <Route 
+            path="dashboard" 
+            element={
+              <PrivateRoute>
+                <DashboardPage/>
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="users" 
+            element={
+              <PrivateRoute>
+                <UserPage/>
+              </PrivateRoute>
+            } 
+          />
           <Route path="product-admin" element={<ProductAdminPage/>} />
           <Route path="orders" element={<OrderPage/>} />
         </Routes>
